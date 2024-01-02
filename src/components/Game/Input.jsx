@@ -24,10 +24,10 @@ export default function Input(props) {
     if (turn === 'user' && verify(text)=== true) {
       let last_word = robotHistory[robotHistory.length-1]
       let last_letter = last_word.charAt(last_word.length-1)
-      if (last_letter === text.charAt(0) && !history.includes(text) ) {
+      if (last_letter.toLowerCase() === text.charAt(0).toLowerCase() && !history.includes(text) ) {
         setRunTimeData({...runTimeData,
           userHistory:[...runTimeData.userHistory, text],
-          history:[...runTimeData.history, text.toLocaleLowerCase()],
+          history:[...runTimeData.history, text],
           turn:'robot'
         })
       }else{
