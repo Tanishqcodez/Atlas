@@ -4,7 +4,7 @@ import {data} from '../../data.json'
 
 export default function Input(props) {
   let {runTimeData,setRunTimeData} = props
-  let {turn, robotHistory,history} = runTimeData
+  let {turn,history} = runTimeData
   const [text, setText] = useState('')
 
   const handleChange = (e)=>{
@@ -22,30 +22,30 @@ export default function Input(props) {
 
   const handleSumbit = ()=>{
     if (turn === 'user' && verify(text)=== true) {
-      let last_word = robotHistory[robotHistory.length-1]
-      let last_letter = last_word.charAt(last_word.length-1)
-      if (last_letter.toLowerCase() === text.charAt(0).toLowerCase() && !history.includes(text) ) {
+      let last_word = history[history.length-1]
+      let last_letter = last_word.charAt(last_word.length-1).toLowerCase()
+      if (last_letter === text.charAt(0).toLowerCase() && !history.includes(text.toLowerCase()) ) {
         setRunTimeData({...runTimeData,
-          userHistory:[...runTimeData.userHistory, text],
-          history:[...runTimeData.history, text],
+          history:[...runTimeData.history, text.toLowerCase()],
           turn:'robot'
         })
+        setText('')
       }else{
         setRunTimeData({...runTimeData,
           turn:'user'
         }),
+        setText('')
         toast.warn('This country/state/district has already been used. Please choose another ')
       }
     }else{
       setRunTimeData({...runTimeData,
         turn:'user'
       }),
-      console.log(runTimeData)
+      setText('')
       toast.warn(`Cannot found ${text} in database`)
 
     }
   }
-
 
   return (
     <div className="w-full fixed bottom-0 p-2 pb-4 flex justify-between items-center ">

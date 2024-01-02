@@ -9,7 +9,6 @@ export default function Game() {
   const [gameRunning, setGameRunning] = useState(false)
   const [runTimeData, setRunTimeData] = useState({
     history: [],
-    robotHistory: [],
     userHistory: [],
     turn: "robot",
   });
@@ -26,8 +25,7 @@ export default function Game() {
       let data = startGame();
       setRunTimeData({
         ...runTimeData,
-        history: [...runTimeData.history, data],
-        robotHistory: [...runTimeData.robotHistory, data.toLocaleLowerCase()],
+        history: [...runTimeData.history, data.toLowerCase()],
         turn: "user",
       });
     } else {
@@ -37,15 +35,13 @@ export default function Game() {
 
   useEffect(() => {
     if (runTimeData.turn === "robot" && gameRunning === true) {
-      console.log('if block running')
-      let last_word =runTimeData.userHistory[runTimeData.userHistory.length - 1];
-      let last_letter = last_word.charAt(last_word.length - 1);
+      let last_word = runTimeData.history[runTimeData.history.length - 1];
+      let last_letter = last_word.charAt(last_word.length - 1).toLowerCase();
       for (let i = 0; i < data.length; i++) {
-        if (data[i].charAt(0).toLowerCase() === last_letter.toLowerCase()&& !runTimeData.history.includes(data[i].toLowerCase())) {
+        if (data[i].charAt(0).toLowerCase()=== last_letter&& !runTimeData.history.includes(data[i].toLowerCase())) {
           setRunTimeData({
             ...runTimeData,
-            robotHistory: [...runTimeData.robotHistory, data[i]],
-            history:[...runTimeData.history, data[i].toLocaleLowerCase()],
+            history:[...runTimeData.history, data[i].toLowerCase()],
             turn: "user",
           });
           break;
