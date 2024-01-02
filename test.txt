@@ -1,0 +1,112 @@
+import "./App.css";
+import { useState } from "react";
+import { country } from "./data.json";
+
+function App() {
+  const [turn, setTurn] = useState("robot");
+  const [text, setText] = useState("");
+  const [started, setStarted] = useState(false)
+  const history = [];
+  const userHistory = []
+  const robotHistory = []
+
+
+  const handleChange = (e) => {
+    setText(e.target.value);
+  };
+
+  //user part
+
+  const verifyHistory = (str) => {
+    return history.some((item) => item.toLowerCase() === str.toLowerCase());
+  };
+
+  const verifyDb = (str) => {
+    return country.some((item) => item.toLowerCase() === str.toLowerCase());
+  };
+
+  const verify = (str) => {
+    return verifyHistory(str) === false && verifyDb(str) === true;
+  };
+
+  const start = () => {
+    let word = country[Math.floor(Math.random()*country.length)]
+    history.push(word)
+    robotHistory.push(word)
+    setStarted(true)
+    setTurn("user")
+    console.log(history)
+  };
+
+  const runRobot = () => {
+    let word = history[history.length - 1];
+    let last_letter = word.charAt(word.length - 1);
+    for (let i = 0; i < country.length; i++) {
+      if (
+        country[i].charAt(0) === last_letter &&
+        !history.some((word) => word.toLowerCase() === country[i].toLowerCase())
+      ) {
+        history.push(country[i]);
+        setTurn("user");
+        console.log("robot:", history);
+        return country[i];
+      }
+    }
+    return false;
+  };
+
+  const runUser = () => {
+    if (verify(text)) {
+      let word = history[history.length - 1];
+      console.log(word,history)
+      // let last_letter = word.charAt(word.length - 1);
+      // if (text.charAt(0)=== last_letter) {
+      //   history.push(text);
+      //   console.log("user:", history);
+      //   setTurn("robot");
+      //   setText("");
+      //   runRobot();
+      // }else{
+      //   alert("not matched")
+      // }
+      console.log(text.charAt(0))
+    } else {
+      alert("already in the history");
+    }
+  };
+
+  const handleClick = () => {
+    if (turn === "user") {
+      runUser();
+    }
+  };
+
+  return (
+    <>
+      <h1 className="text-center text-2xl">Go 4 Country</h1>
+      <div className="flex justify-center items-center">
+        <div className="border-2 border-black h-[35vw] w-[40vw] mt-8 relative ">
+          <button className={`border-2 border-black ${started? 'hidden': ''}`} onClick={start}>Start</button>
+          <div className="bottom-0 absolute w-full mb-2">
+            <input
+              onChange={handleChange}
+              value={text}
+              placeholder="Type your answer here"
+              type="text"
+              className="border-2 border-black w-[79%] ml-1"
+              disabled={turn !== "user" ? true : false}
+            />
+            <button
+              className="border-2 border-black absolute bottom-0 w-[19%] ml-1  "
+              onClick={handleClick}
+            >
+              Send
+            </button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default App;
